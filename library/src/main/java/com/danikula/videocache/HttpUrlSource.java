@@ -58,7 +58,7 @@ public class HttpUrlSource implements Source {
                 new SourceInfo(url, Integer.MIN_VALUE, ProxyCacheUtils.getSupposablyMime(url));
     }
 
-    public HttpUrlSource(HttpUrlSource source) {
+    private HttpUrlSource(HttpUrlSource source) {
         this.sourceInfo = source.sourceInfo;
         this.sourceInfoStorage = source.sourceInfoStorage;
         this.headerInjector = source.headerInjector;
@@ -189,6 +189,7 @@ public class HttpUrlSource implements Source {
         }
     }
 
+    @Override
     public synchronized String getMime() throws ProxyCacheException {
         if (TextUtils.isEmpty(sourceInfo.mime)) {
             fetchContentInfo();
@@ -196,8 +197,14 @@ public class HttpUrlSource implements Source {
         return sourceInfo.mime;
     }
 
+    @Override
     public String getUrl() {
         return sourceInfo.url;
+    }
+
+    @Override
+    public Source newSource() {
+        return new HttpUrlSource(this);
     }
 
     @Override

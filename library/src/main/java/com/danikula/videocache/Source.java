@@ -38,4 +38,15 @@ public interface Source {
      * @throws ProxyCacheException if error occur while closing source.
      */
     void close() throws ProxyCacheException;
+
+    /**
+     * TODO 添加一个说明
+     *
+     * @return
+     */
+    Source newSource();
+
+    String getMime() throws ProxyCacheException;
+
+    String getUrl();
 }

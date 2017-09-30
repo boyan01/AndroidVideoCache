@@ -29,11 +29,27 @@ public class ByteArraySource implements Source {
     @Override
     public void open(long offset) throws ProxyCacheException {
         arrayInputStream = new ByteArrayInputStream(data);
+        //noinspection ResultOfMethodCallIgnored
         arrayInputStream.skip(offset);
     }
 
     @Override
     public void close() throws ProxyCacheException {
+    }
+
+    @Override
+    public Source newSource() {
+        return new ByteArraySource(data);
+    }
+
+    @Override
+    public String getMime() throws ProxyCacheException {
+        throw new IllegalAccessError();
+    }
+
+    @Override
+    public String getUrl() {
+        throw new IllegalAccessError();
     }
 }
 

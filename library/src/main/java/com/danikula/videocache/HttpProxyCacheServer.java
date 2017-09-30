@@ -10,6 +10,8 @@ import com.danikula.videocache.file.TotalCountLruDiskUsage;
 import com.danikula.videocache.file.TotalSizeLruDiskUsage;
 import com.danikula.videocache.headers.EmptyHeadersInjector;
 import com.danikula.videocache.headers.HeaderInjector;
+import com.danikula.videocache.sources.HttpUrlSourceProvider;
+import com.danikula.videocache.sources.SourceProvider;
 import com.danikula.videocache.sourcestorage.SourceInfoStorage;
 import com.danikula.videocache.sourcestorage.SourceInfoStorageFactory;
 
@@ -51,6 +53,7 @@ import static com.danikula.videocache.Preconditions.checkNotNull;
  *
  * @author Alexey Danilov (danikula@gmail.com).
  */
+@SuppressWarnings("unused")
 public class HttpProxyCacheServer {
 
     private static final Logger LOG = LoggerFactory.getLogger("HttpProxyCacheServer");
@@ -353,6 +356,7 @@ public class HttpProxyCacheServer {
         private DiskUsage diskUsage;
         private SourceInfoStorage sourceInfoStorage;
         private HeaderInjector headerInjector;
+        private SourceProvider sourceProvider;
 
         public Builder(Context context) {
             this.sourceInfoStorage = SourceInfoStorageFactory.newSourceInfoStorage(context);
@@ -360,6 +364,7 @@ public class HttpProxyCacheServer {
             this.diskUsage = new TotalSizeLruDiskUsage(DEFAULT_MAX_SIZE);
             this.fileNameGenerator = new Md5FileNameGenerator();
             this.headerInjector = new EmptyHeadersInjector();
+            this.sourceProvider = new HttpUrlSourceProvider();
         }
 
         /**
@@ -442,6 +447,17 @@ public class HttpProxyCacheServer {
         }
 
         /**
+         * add source to fetch url data
+         *
+         * @param sourceProvider provider a source to fetch data from url
+         * @return
+         */
+        public Builder sourceProvider(SourceProvider sourceProvider) {
+            this.sourceProvider = checkNotNull(sourceProvider);
+            return this;
+        }
+
+        /**
          * Builds new instance of {@link HttpProxyCacheServer}.
          *
          * @return proxy cache. Only single instance should be used across whole app.
@@ -452,7 +468,7 @@ public class HttpProxyCacheServer {
         }
 
         private Config buildConfig() {
-            return new Config(cacheRoot, fileNameGenerator, diskUsage, sourceInfoStorage, headerInjector);
+            return new Config(cacheRoot, fileNameGenerator, diskUsage, sourceInfoStorage, headerInjector, sourceProvider);
         }
 
     }
