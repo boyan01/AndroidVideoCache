@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.novoda:bintray-release:0.4.0'
+        classpath 'com.novoda:bintray-release:0.8.0'
     }
 }
 
@@ -12,12 +12,11 @@ apply plugin: 'idea'
 apply plugin: 'bintray-release'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion compile_sdk.toInteger()
 
     defaultConfig {
-        minSdkVersion 9
-        targetSdkVersion 26
+        minSdkVersion min_sdk.toInteger()
+        targetSdkVersion target_sdk.toInteger()
         versionCode 22
         versionName '2.7.1'
     }
@@ -37,7 +36,7 @@ idea {
 
 dependencies {
     compile 'org.slf4j:slf4j-android:1.7.21'
-    compile 'com.android.support:support-annotations:26.1.0'
+    api "com.android.support:support-annotations:$android_support_version"
 }
 
 publish {
